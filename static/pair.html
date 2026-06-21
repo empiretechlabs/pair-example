@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EMPIRE-MD PAIR-CODE</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8'
+            }
+          },
+          animation: {
+            'float': 'float 6s ease-in-out infinite'
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-10px)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8fafc;
+    }
+
+    .card-gradient {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.9) 0%, rgba(37, 99, 235, 0.9) 100%);
+    }
+
+    .input-glow:focus {
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .fa-spinner {
+      animation: spin 1.5s linear infinite;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 bg-gray-50">
+  <div class="fixed inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute top-1/4 left-1/5 w-16 h-16 rounded-full bg-primary-500/10 animate-float"></div>
+    <div class="absolute bottom-1/3 right-1/4 w-20 h-20 rounded-full bg-primary-500/10 animate-float" style="animation-delay: 2s"></div>
+  </div>
+
+  <div class="w-full max-w-md">
+    <div class="card-gradient text-white rounded-t-xl p-6 text-center shadow-lg">
+      <div class="w-16 h-16 rounded-full bg-white/10 backdrop-blur-sm mx-auto mb-4 flex items-center justify-center border border-white/20">
+        <i class="fas fa-link text-2xl"></i>
+      </div>
+      <h1 class="text-2xl font-bold tracking-tight">EMPIRE_MD</h1>
+      <p class="text-sm opacity-90 mt-1">Secure Device Pairing</p>
+    </div>
+
+    <div class="bg-white rounded-b-xl shadow-lg p-6">
+      <h2 class="text-xl font-semibold text-gray-800 text-center mb-1">Pair Your Device</h2>
+      <p class="text-gray-600 text-center text-sm mb-6">Enter your WhatsApp number with country code</p>
+
+      <div class="space-y-4">
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <i class="fas fa-mobile-alt text-gray-400"></i>
+          </div>
+          <input
+            type="tel"
+            id="number"
+            inputmode="numeric"
+            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 input-glow transition-all"
+            placeholder="e.g. 2348012345678"
+          >
+        </div>
+
+        <button
+          id="submit"
+          class="w-full py-3 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          <span>Generate Code</span>
+          <i class="fas fa-arrow-right"></i>
+        </button>
+
+        <div id="loading-spinner" class="hidden flex justify-center py-2">
+          <i class="fas fa-spinner text-primary-600 text-xl"></i>
+        </div>
+
+        <div id="message" class="hidden rounded-lg border p-4 text-center text-sm font-medium"></div>
+
+        <div id="pair" class="hidden bg-gray-50 border border-gray-200 rounded-lg p-4 text-center">
+          <p class="text-gray-600 mb-2">Your pairing code:</p>
+          <div
+            id="copy"
+            class="text-primary-600 font-bold text-xl cursor-pointer hover:text-primary-700 transition-colors tracking-widest"
+          ></div>
+          <p class="text-xs text-gray-500 mt-2">Click code to copy, then enter it in WhatsApp</p>
+        </div>
+
+        <button
+          onclick="window.location.href='/'"
+          class="w-full py-2.5 border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 font-medium rounded-lg transition-all duration-200"
+        >
+          Back to home
+        </button>
+      </div>
+    </div>
+
+    <div class="text-center mt-4 text-xs text-gray-500">
+      <p>Secure end-to-end encrypted connection</p>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"></script>
+  <script>
+    const pairBox = document.getElementById("pair");
+    const submitBtn = document.getElementById("submit");
+    const numberInput = document.getElementById("number");
+    const loadingSpinner = document.getElementById("loading-spinner");
+    const messageBox = document.getElementById("message");
+    const copyEl = document.getElementById("copy");
+
+    function showMessage(text, type) {
+      messageBox.textContent = text;
+      messageBox.className = "rounded-lg border p-4 text-center text-sm font-medium";
+
+      if (type === "error") {
+        messageBox.classList.add("border-red-200", "bg-red-50", "text-red-600");
+      } else {
+        messageBox.classList.add("border-primary-200", "bg-primary-50", "text-primary-700");
+      }
+
+      messageBox.classList.remove("hidden");
+    }
+
+    function hideMessage() {
+      messageBox.classList.add("hidden");
+      messageBox.textContent = "";
+    }
+
+    function formatPhoneNumber(digits) {
+      let formatted = "+";
+      for (let i = 0; i < digits.length; i++) {
+        if (i === 3 || i === 6 || i === 9) {
+          formatted += " ";
+        }
+        formatted += digits[i];
+      }
+      return formatted;
+    }
+
+    async function copyCode() {
+      const code = copyEl.textContent.trim();
+      if (!code) return;
+
+      await navigator.clipboard.writeText(code.replace(/-/g, ""));
+      const original = copyEl.textContent;
+      copyEl.textContent = "Copied!";
+      copyEl.classList.add("text-green-600");
+      setTimeout(() => {
+        copyEl.textContent = original;
+        copyEl.classList.remove("text-green-600");
+      }, 1500);
+    }
+
+    copyEl.addEventListener("click", copyCode);
+
+    submitBtn.addEventListener("click", async (e) => {
+      e.preventDefault();
+      hideMessage();
+      pairBox.classList.add("hidden");
+
+      const digits = numberInput.value.replace(/[^0-9]/g, "");
+
+      if (!digits) {
+        showMessage("Enter your WhatsApp number with country code.", "error");
+        return;
+      }
+
+      if (digits.length < 10) {
+        showMessage("Invalid number. Include country code, e.g. 2348012345678.", "error");
+        return;
+      }
+
+      numberInput.value = formatPhoneNumber(digits);
+      submitBtn.disabled = true;
+      loadingSpinner.classList.remove("hidden");
+
+      try {
+        const { data } = await axios.get(`/paircode?code=${encodeURIComponent(digits)}`);
+        const code = data.code;
+
+        if (!code) {
+          showMessage("Could not generate a pairing code. Try again.", "error");
+          return;
+        }
+
+        copyEl.textContent = code;
+        pairBox.classList.remove("hidden");
+      } catch (error) {
+        const msg = error.response?.data?.message
+          || error.response?.data?.error
+          || "Error connecting to server. Try again.";
+        showMessage(msg, "error");
+      } finally {
+        loadingSpinner.classList.add("hidden");
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
