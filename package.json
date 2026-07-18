@@ -1,40 +1,30 @@
 {
   "name": "pair-example",
   "version": "1.0.0",
-  "description": "simple pairing code example",
+  "description": "Simple WhatsApp pairing code example",
   "main": "index.js",
   "scripts": {
-    "start": "pm2-runtime start index.js --name pair-example --node-args=\"-r @babel/register\"",
+    "start": "pm2-runtime start index.js --name pair-example",
     "stop": "pm2 stop pair-example",
     "restart": "pm2 restart pair-example",
-    "dev": "node -r @babel/register index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "node index.js",
+    "test": "echo \"No tests\""
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/empiretechlabs/pair-example.git"
   },
   "keywords": [
-    "whatsapp-bot",
+    "whatsapp",
     "baileys",
-    "pairing-code",
-    "nodejs",
+    "pairing",
     "express",
-    "mega",
-    "session-store",
-    "pm2",
-    "authentication",
-    "qrless-login",
-    "whatsapp-api",
-    "automation",
-    "empire-tech-labs",
-    "empire-md",
-    "bot-framework"
+    "pm2"
   ],
   "author": "Empire Tech Labs",
   "license": "MIT",
   "engines": {
-    "node": "24.x"
+    "node": "22.x"
   },
   "dependencies": {
     "async-mutex": "^0.5.0",
@@ -46,10 +36,5 @@
     "pino": "^10.3.1",
     "pm2": "^7.0.1",
     "qrcode": "^1.5.4"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.29.0",
-    "@babel/preset-env": "^7.29.2",
-    "@babel/register": "^7.28.6"
   }
 }
