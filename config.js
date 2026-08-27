@@ -2,7 +2,7 @@ module.exports = {
   PORT: process.env.PORT || 4000,
   PREFIX: process.env.PREFIX || "EMPIRE-MD×",
   EMAIL: process.env.EMAIL || "hackeronlyoneempire@duck.com",
-  PASS: process.env.PASS || "Jehovah@1B",
+  PASS: process.env.PASS || "",
   MESSAGE: process.env.MESSAGE || `
 ╔════◇
 ║『𝗧𝗵𝗮𝗻𝗸𝘀 𝗙𝗼𝗿 𝗖𝗵𝗼𝗼𝘀𝗶𝗻𝗴 𝗘𝗺𝗽𝗶𝗿𝗲•𝗠𝗱』
