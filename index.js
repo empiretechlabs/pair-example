@@ -138,8 +138,9 @@ function makeSocket(state) {
         },
         printQRInTerminal: false,
         logger: pino({ level: 'fatal' }).child({ level: 'fatal' }),
-        browser: Browsers.macOS('Safari'),
-        markOnlineOnConnect: false
+        browser: Browsers.windows('Edge'),
+        markOnlineOnConnect: false,
+        generateHighQualityLinkPreview: true
     });
 }
 
